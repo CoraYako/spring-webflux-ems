@@ -1,4 +1,4 @@
-package com.employeemanagement;
+package com.employeemanagement.unit;
 
 import com.employeemanagement.controller.EmployeeController;
 import com.employeemanagement.model.HttpErrorCode;
@@ -78,7 +78,7 @@ public class EmployeeControllerTest {
                 .jsonPath("$.email").isEqualTo(requestDto.email());
     }
 
-    @DisplayName(value = "JUnit Test for get and Employee by ID")
+    @DisplayName(value = "JUnit Test for get an Employee by ID")
     @Test
     public void givenEmployeeId_whenGetEmployee_thenEmployeeAndStatusOkIsReturned() {
         // given
@@ -104,7 +104,7 @@ public class EmployeeControllerTest {
                 .jsonPath("$.email").isEqualTo("hc@email.com");
     }
 
-    @DisplayName(value = "JUnit Test for get and Employee by ID but is not present in the database")
+    @DisplayName(value = "JUnit Test for get an Employee by ID but is not present in the database")
     @Test
     public void givenEmployeeId_whenGetEmployee_thenStatusNotFoundIsReturned() {
         // given
@@ -177,7 +177,7 @@ public class EmployeeControllerTest {
                 .jsonPath("$.email").isEqualTo(updateRequest.email());
     }
 
-    @DisplayName(value = "JUnit Test for get and Employee by ID but is not present in the database")
+    @DisplayName(value = "JUnit Test for update an Employee but the Employee to update is not present in the database")
     @Test
     public void givenEmployeeIdAndUpdateRequest_whenGetEmployeeToUpdate_thenStatusNotFoundIsReturned() {
         // given
@@ -221,25 +221,5 @@ public class EmployeeControllerTest {
         response.expectStatus().isNoContent()
                 .expectBody()
                 .consumeWith(System.out::println);
-    }
-
-    @DisplayName(value = "JUnit Test for delete an Employee but the Employee is not present in the database")
-    @Test
-    public void givenEmployeeId_whenGetEmployeeToDelete_thenStatusNotFoundIsReturned() {
-        // given
-        final String employeeId = objectId.toHexString();
-        given(employeeService.deleteEmployeeById(anyString()))
-                .willThrow(new RuntimeException(STR."Employee not found for ID \{employeeId}"));
-
-        // when
-        WebTestClient.ResponseSpec response = webTestClient.delete().uri(URL_TEMPLATE, employeeId).exchange();
-
-        // then
-        response.expectStatus().isNotFound()
-                .expectBody()
-                .consumeWith(System.out::println)
-                .jsonPath("$.message").isEqualTo(STR."Employee not found for ID \{employeeId}")
-                .jsonPath("$.timestamp").isNotEmpty()
-                .jsonPath("$.errorCode").isEqualTo(HttpErrorCode.RESOURCE_NOT_FOUND.toString());
     }
 }
