@@ -32,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     employee.setFirstName(requestDto.firstName());
                     employee.setLastName(requestDto.lastName());
                     employee.setEmail(requestDto.email());
-                    return employeeRepository.insert(employee);
+                    return employeeRepository.save(employee);
                 })
                 .map(employeeMapper::toDto)
                 .switchIfEmpty(Mono.error(new RuntimeException(STR."Employee not found for ID \{id}")));
